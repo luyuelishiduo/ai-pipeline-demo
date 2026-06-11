@@ -2338,6 +2338,14 @@ createParticles('particles-right', 80, 'rgba(249,115,22,0.4)');
 function scrollToStep(id) {
   var el = document.getElementById(id);
   if (el) el.scrollIntoView({ behavior: 'smooth' });
+  // Force active on clicked node
+  var track = activeTrack;
+  var navContainer = document.getElementById(track === 'image' ? 'snav-image' : 'snav-video');
+  if (navContainer) {
+    navContainer.querySelectorAll('.snav-node').forEach(function(n) { n.classList.remove('active'); });
+    var node = navContainer.querySelector('.snav-node[data-step="' + id + '"]');
+    if (node) node.classList.add('active');
+  }
 }
 
 // ===== Step Nav: IntersectionObserver highlight =====
@@ -2366,7 +2374,7 @@ function setupStepNav(track) {
         if (activeNode) activeNode.classList.add('active');
       }
     });
-  }, { threshold: 0.3, rootMargin: '-10% 0px -10% 0px' });
+  }, { threshold: 0.1, rootMargin: '0px 0px -5% 0px' });
 
   nodes.forEach(function(id) {
     var el = document.getElementById(id);
